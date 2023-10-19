@@ -1,60 +1,82 @@
 #include "sort.h"
 
-void swap(int *a, int *b) {
-    int temp = *a;
+/**
+ * swap - swap two elements
+ * @a: first element
+ * @b: second element
+ * Return: void
+ */
+void swap(int *a, int *b)
+{
+    int tmp = *a;
+
     *a = *b;
-    *b = temp;
+    *b = tmp;
 }
 
-int lomuto_partition(int *array, int low, int high, size_t size) {
+/**
+ * partition - partition the array
+ * @array: array to be sorted
+ * @low: lowest index
+ * @high: highest index
+ * @size: size of the array
+ * Return: index of the pivot
+ */
+int partition(int *array, int low, int high, size_t size)
+{
     int pivot = array[high];
-    int i = low - 1;
+    int i = low - 1, j;
 
-    for (int j = low; j < high; j++) {
-        if (array[j] < pivot) {
+    for (j = low; j < high; j++)
+    {
+        if (array[j] <= pivot)
+        {
             i++;
-            swap(&array[i], &array[j]);
-            if (i != j) {
-                printf("Swap: %d <--> %d\n", array[i], array[j]);
-                for (size_t k = 0; k < size; k++) {
-                    printf("%d", array[k]);
-                    if (k < size - 1) {
-                        printf(", ");
-                    }
-                }
-                printf("\n");
+            if (i != j)
+            {
+                swap(&array[i], &array[j]);
+                print_array(array, size);
             }
         }
     }
-
-    swap(&array[i + 1], &array[high]);
-    if (i + 1 != high) {
-        printf("Swap: %d <--> %d\n", array[i + 1], array[high]);
-        for (size_t k = 0; k < size; k++) {
-            printf("%d", array[k]);
-            if (k < size - 1) {
-                printf(", ");
-            }
-        }
-        printf("\n");
+    if (i + 1 != high)
+    {
+        swap(&array[i + 1], &array[high]);
+        print_array(array, size);
     }
-    return i + 1;
+    return (i + 1);
 }
 
-void quick_sort_helper(int *array, int low, int high, size_t size) {
-    if (low < high) {
-        int partition_idx = lomuto_partition(array, low, high, size);
+/**
+ * quicksort - quicksort algorithm
+ * @array: array to be sorted
+ * @low: lowest index
+ * @high: highest index
+ * @size: size of the array
+ * Return: void
+ */
 
-        quick_sort_helper(array, low, partition_idx - 1, size);
-        quick_sort_helper(array, partition_idx + 1, high, size);
+void quicksort(int *array, int low, int high, size_t size)
+{
+    int pivot;
+
+    if (low < high)
+    {
+        pivot = partition(array, low, high, size);
+        quicksort(array, low, pivot - 1, size);
+        quicksort(array, pivot + 1, high, size);
     }
 }
 
-void quick_sort(int *array, size_t size) {
-	if (array == NULL || size < 2) 
-	{
-		return;  // No need to sort
-	}
-
-	quick_sort_helper(array, 0, size - 1, size);
+/**
+ * quick_sort - quicksort algorithm
+ * @array: array to be sorted
+ * @size: size of the array
+ * Return: void
+ */
+void quick_sort(int *array, size_t size)
+{
+    if (array == NULL || size < 2)
+        return;
+    quicksort(array, 0, size - 1, size);
 }
